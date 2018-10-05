@@ -1,6 +1,6 @@
 ***Parsrus***
 
-A simple json and xml parser for golang web apis. 
+Return json or xml for golang web apis. 
 
 **Usage**
 
