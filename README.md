@@ -35,5 +35,13 @@ To add Parsrus in your code
         p.Parse(parsrus.Feilds{"code": "200", "message": "xml parsed"})
         return
     }
+    // Return json request with specified http code
+    func JSONRequestHandlerWithStatusCode(w http.ResponseWriter, r *http.Request) {
+        // parsrus.Parser struct fields {ResponseWriter, ContentType}
+        p := parsrus.Parser{ResponseWriter: w, ContentType: "json"}
+        // p.Parse() takes a map[string]interface{} and http code
+        p.Parse(parsrus.Feilds{"code": "200", "message": "json parsed"}, 200)
+        return
+    }
 ```
 
