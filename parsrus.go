@@ -34,7 +34,7 @@ func (r *Parser) toXML(p interface{}) ([]byte, error) {
 }
 
 // Parse content
-func (r *Parser) Parse(fields Fields) {
+func (r *Parser) Parse(fields Fields, httpCode ...int) {
 	var bt []byte
 	if r.ContentType == "json" {
 		bt, _ = r.toJSON(fields)
@@ -43,5 +43,9 @@ func (r *Parser) Parse(fields Fields) {
 		bt, _ = r.toXML(fields)
 		r.ResponseWriter.Header().Set("Content-Type", "application/xml")
 	}
+	if len(httpCode) > 0 {
+		r.ResponseWriter.WriteHeader(httpCode[0])
+	}
 	r.ResponseWriter.Write(bt)
+
 }
