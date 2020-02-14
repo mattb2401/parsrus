@@ -49,3 +49,18 @@ func (r *Parser) Parse(fields Fields, httpCode ...int) {
 	r.ResponseWriter.Write(bt)
 
 }
+
+func (r *Parser) Serialize(ct interface{}, httpCode ...int) {
+	var bt []byte
+	if r.ContentType == "json" {
+		bt, _ = r.toJSON(ct)
+		r.ResponseWriter.Header().Set("Content-Type", "application/json")
+	} else if r.ContentType == "xml" {
+		bt, _ = r.toXML(ct)
+		r.ResponseWriter.Header().Set("Content-Type", "application/xml")
+	}
+	if len(httpCode) > 0 {
+		r.ResponseWriter.WriteHeader(httpCode[0])
+	}
+	r.ResponseWriter.Write(bt)
+}
