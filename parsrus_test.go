@@ -81,6 +81,28 @@ func TestParseJSONWithoutHTTPCode(t *testing.T) {
 	}
 }
 
+func TestSerializeJSONWithHTTPCode(t *testing.T) {
+	req := httptest.NewRequest("GET", "http://localhost:3000", nil)
+	w := httptest.NewRecorder()
+	handler := http.HandlerFunc(httpHandlerSerializeJSON)
+	handler.ServeHTTP(w, req)
+	res := w.Result()
+	bt, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Errorf("Error occurred %v", err)
+	}
+	var r map[string]interface{}
+	err = json.Unmarshal(bt, &r)
+	if err != nil {
+		t.Errorf("Error occurred %v", err)
+	}
+	if r["code"] != "200" {
+		t.Errorf("Code is not 200")
+	}
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("HTTP code is not 200")
+	}
+}
 
 func httpJSONHandler(w http.ResponseWriter, r *http.Request) {
 	p := Parser{ResponseWriter: w, ContentType: "json"}
@@ -100,5 +122,11 @@ func httpXMLHandler(w http.ResponseWriter, r *http.Request) {
 func httpHandlerNoStatusCode(w http.ResponseWriter, r *http.Request) {
 	p := Parser{ResponseWriter: w, ContentType: "json"}
 	p.Parse(Fields{"code": "200", "message": "json parsed"})
+	return
+}
+
+func httpHandlerSerializeJSON(w http.ResponseWriter, r *http.Request) {
+	p := Parser{ResponseWriter: w, ContentType: "json"}
+	p.Serialize(map[string]interface{}{"code": "200", "message": "json parsed"}, 200)
 	return
 }
