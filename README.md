@@ -39,9 +39,17 @@ To add Parsrus in your code
     func JSONRequestHandlerWithStatusCode(w http.ResponseWriter, r *http.Request) {
         // parsrus.Parser struct fields {ResponseWriter, ContentType}
         p := parsrus.Parser{ResponseWriter: w, ContentType: "json"}
-        // p.Parse() takes a map[string]interface{} and http code
+        // p.Parse() takes a map[string]interface{} of parsrus.Fields and http code
         p.Parse(parsrus.Feilds{"code": "200", "message": "json parsed"}, 200)
         return
     }
-```
+
+    //You can serialize an interface to JSON or XML using the Serialize functon
+    func JSONRequestHandlerWithStatusCode(w http.ResponseWriter, r *http.Request) {
+        // parsrus.Parser struct fields {ResponseWriter, ContentType}
+        p := parsrus.Parser{ResponseWriter: w, ContentType: "json"}
+        // p.Serialize() takes any map[string]interface{} and http code
+        p.Serialize(map[string]interface{}{"data": "boom"}, 200)
+        return
+    }
 
